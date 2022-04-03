@@ -19,11 +19,9 @@ export default function TelaInicio({salvarUsuario}){
         const requisicao = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login", infoUsuario);
 
         requisicao.then(resposta => {
-            console.log(resposta.data);
-
             salvarUsuario(resposta.data);
 
-            navigate("/habitos");
+            navigate("/hoje");
         })
 
         requisicao.catch(resposta => {

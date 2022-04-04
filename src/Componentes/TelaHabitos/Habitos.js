@@ -1,13 +1,11 @@
 import axios from "axios";
 import styled from "styled-components";
-import { useContext } from "react";
 import { DadosUsuario } from "../Context";
 
-export default function Habitos({id, nome, dias}){
+export default function Habitos({id, nome, dias, setDeleted}){
     const listaDias =[{name: "D", id: 0},{name: "S", id: 1},{name: "T", id: 2},{name: "Q", id: 3},{name: "Q", id: 4},{name: "S", id: 5},{name: "S", id: 6}];
     const diasSelecionados = listaDias.filter(elemento => dias.includes(elemento.id) );
 
-    const {usuario, setUsuario} = useContext(DadosUsuario);
 
     const token = localStorage.getItem("token");
 
@@ -34,8 +32,7 @@ export default function Habitos({id, nome, dias}){
 
         requisicao.then(resposta => {
             alert("Habito excluído!");
-
-            window.location.reload();
+            setDeleted(true);
         })
 
         requisicao.catch(erro => {

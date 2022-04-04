@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import axios from "axios";
 
-export default function Habitos({id,nome,feito,sequencia,recorde}){
+export default function Habitos({id,nome,feito,sequencia,recorde, feitos, setFeitos}){
 
 
     const token = localStorage.getItem("token");
@@ -18,12 +18,11 @@ export default function Habitos({id,nome,feito,sequencia,recorde}){
 
         requisicao.then(resposta =>{
             alert("Parabens por concluir seu hábito")
-
-            window.location.reload();
+            setFeitos(feitos += 1)
         });
 
         requisicao.catch(erro => {
-            console.log(erro.responde);
+            console.log(erro.response);
         })
     }
 
@@ -32,11 +31,11 @@ export default function Habitos({id,nome,feito,sequencia,recorde}){
 
         requisicao.then(resposta =>{
             alert("Habito desmarcado com sucesso")
-
-            window.location.reload();
+            setFeitos(feitos -= 1)
         });
 
         requisicao.catch(erro => {
+            console.log(erro.response);
         })
     }
 

@@ -27,8 +27,6 @@ export default function Habito({ setCriacao}){
 
             requisicao.then(resposta => {
                 setCriacao(false);
-
-                window.location.reload();
             })
 
             requisicao.catch(erro => {

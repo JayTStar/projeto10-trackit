@@ -2,13 +2,15 @@ import { Link } from "react-router-dom"
 import React from "react"
 import styled from "styled-components";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import { useProgresso } from "../Context";
 
 export default function Footer(){
-    const valor = localStorage.getItem("progresso")
+    const {progresso, setProgresso} = useProgresso();
+
     return(
         <Conteudo>
             <Link to={{pathname: "/habitos"}}><p>Hábitos</p></Link>
-            <Link to={{pathname: "/hoje"}}><Hoje><CircularProgressbar  value={valor} text="Hoje"/></Hoje></Link>
+            <Link to={{pathname: "/hoje"}}><Hoje><CircularProgressbar  value={progresso} text="Hoje"/></Hoje></Link>
             <Link to={{pathname: "/historico"}}><p>Histórico</p></Link>
         </Conteudo>
     )

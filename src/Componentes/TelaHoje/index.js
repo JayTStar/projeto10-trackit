@@ -1,15 +1,18 @@
-import { useState, useEffect, useContext } from "react"
+import { useEffect, useState } from "react"
 import axios from "axios";
 import styled from "styled-components";
 import Header from "../Header"
 import Footer from "../Footer"
 import Habitos from "./Habitos"
-import { DadosUsuario } from "../Context";
+import { useHoje, useProgresso, useHabitos } from "../Context";
 
 export default function TelaHoje(){
-    const {usuario, setUsuario} = useContext(DadosUsuario);
-    const [habitosHoje, setHabitosHoje] = useState([]);
-    const [habitosConclidos, setHabitosConcluidos] = useState([]);
+    const {habitosHoje, setHabitosHoje} = useHoje();
+    const {progresso, setProgresso} = useProgresso();
+    const {meusHabitos, setMeusHabitos} = useHabitos();
+
+    const [feitos, setFeitos] = useState(0);
+
     const token = localStorage.getItem("token");
 
     const config = {
@@ -23,12 +26,18 @@ export default function TelaHoje(){
 
         requisicao.then(resposta => {
             setHabitosHoje(resposta.data);
+            setFeitos(checaFeitos());
         })
 
         requisicao.catch(erro =>{
             console.log(erro.response);
         })
-    }, []);
+    }, [meusHabitos, feitos]);
+
+    useEffect(() => {
+        setProgresso(((feitos / habitosHoje.length) * 100).toFixed(0));
+    }, [feitos]);
+    
 
     function renderHabitos(){
 
@@ -41,7 +50,7 @@ export default function TelaHoje(){
             return(
                 
                  <ul>
-                     {habitosHoje.map(elemento => {return <Habitos id={elemento.id} nome={elemento.name} feito={elemento.done} sequencia={elemento.currentSequence} recorde={elemento.highestSequence}/>})}
+                     {habitosHoje.map(elemento => {return <Habitos id={elemento.id} nome={elemento.name} feito={elemento.done} sequencia={elemento.currentSequence} recorde={elemento.highestSequence} feitos={feitos} setFeitos={setFeitos}/>})}
                  </ul>
             )
         }
@@ -56,16 +65,18 @@ export default function TelaHoje(){
     }
 
     function habitosFeitos(){
-        const feitos = habitosHoje.filter(elemento => elemento.done === true);
-
-        localStorage.setItem("progresso", ((feitos.length / habitosHoje.length) * 100).toFixed(0));
-
-        if(feitos.length > 0){
-            return <Concluidos feito={feitos.length}>{((feitos.length / habitosHoje.length) * 100).toFixed(0)}% dos hábitos concluídos</Concluidos>
+        if(feitos > 0){
+            return <Concluidos feito={feitos}>{((feitos / habitosHoje.length) * 100).toFixed(0)}% dos hábitos concluídos</Concluidos>
         }
         else{
-            return <Concluidos feito={feitos.length}>Nenhum hábito concluído ainda</Concluidos>
+            return <Concluidos feito={feitos}>Nenhum hábito concluído ainda</Concluidos>
         }
+    }
+
+    function checaFeitos(){
+        const concluidos = habitosHoje.filter(elemento => elemento.done === true);
+
+        return concluidos.length;
     }
 
     const habitos = renderHabitos();
@@ -86,8 +97,8 @@ export default function TelaHoje(){
 }
 
 function corConcluido(feitos){
-    if(feitos===0) return '#BABABA'
-    else return '#8FC549'
+    if(feitos>0) return '#8FC549'
+    else return '#BABABA'
 }
 
 const Conteudo = styled.main`

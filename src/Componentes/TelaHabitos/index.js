@@ -5,16 +5,14 @@ import Header from "../Header"
 import Footer from "../Footer"
 import Habito from "./CriacaoHabito"
 import Habitos from "./Habitos";
-import { DadosUsuario } from "../Context";
+import { useHabitos } from "../Context";
 
 export default function TelaHabitos(){
+    const {meusHabitos, setMeusHabitos} = useHabitos();
 
     const token = localStorage.getItem("token");
 
-    const {usuario, setUsuario} = useContext(DadosUsuario);
-
-
-    const [meusHabitos, setMeusHabitos] = useState([])
+    const [deleted, setDeleted] = useState(false);
     const [criacao,setCriacao] = useState(false);
 
     const config = {
@@ -33,7 +31,11 @@ export default function TelaHabitos(){
         requisicao.catch(erro =>{
             console.log(erro.response);
         })
-    }, []);
+    }, [criacao, deleted]);
+
+    useEffect(() => {
+        setDeleted(false);
+    }, [meusHabitos])
 
 
     function renderHabitos(){
@@ -44,10 +46,9 @@ export default function TelaHabitos(){
            )
        }
        else{
-        console.log(meusHabitos);
            return(
                 <ul>
-                    {meusHabitos.map(elemento => {return <Habitos id={elemento.id} nome={elemento.name} dias={elemento.days}/>})}
+                    {meusHabitos.map(elemento => {return <Habitos id={elemento.id} nome={elemento.name} dias={elemento.days} setDeleted={setDeleted}/>})}
                 </ul>
            )
        }

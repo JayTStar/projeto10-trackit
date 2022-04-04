@@ -1,14 +1,66 @@
 import styled from "styled-components";
+import axios from "axios";
 
 export default function Habitos({id,nome,feito,sequencia,recorde}){
+
+
+    const token = localStorage.getItem("token");
+
+
+    const config = {
+        headers: {
+            "Authorization": `Bearer ${token}`
+        }
+    }
+
+    function marcarFeito(habitoFeito){
+        const requisicao = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habitoFeito}/check`, "" , config);
+
+        requisicao.then(resposta =>{
+            alert("Parabens por concluir seu hábito")
+
+            window.location.reload();
+        });
+
+        requisicao.catch(erro => {
+            console.log(erro.responde);
+        })
+    }
+
+    function desmarcarFeito(habito){
+        const requisicao = axios.post(`https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${habito}/uncheck`, "" , config);
+
+        requisicao.then(resposta =>{
+            alert("Habito desmarcado com sucesso")
+
+            window.location.reload();
+        });
+
+        requisicao.catch(erro => {
+        })
+    }
+
+    function handleClick(id, feito){
+        if(feito){
+            desmarcarFeito(id);
+        }
+        else{
+            marcarFeito(id);
+        }
+    }
     return(
-        <Conteudo>
+        <Conteudo feito={feito}>
             <h1>{nome}</h1>
-            <ion-icon name="checkbox-outline"></ion-icon>
+            <ion-icon onClick={() => {handleClick(id, feito)}}  name="checkbox-outline"></ion-icon>
             <p>Sequência atual: {sequencia}</p>
             <p>Seu recorde: {recorde}</p>
         </Conteudo>
     )
+}
+
+function checkboxColor(feito){
+    if (feito) return '#8FC549'
+    else return '#EBEBEB'
 }
 
 const Conteudo = styled.section`
@@ -22,6 +74,7 @@ const Conteudo = styled.section`
 
     box-sizing: border-box;
     padding: 15px;
+    margin-bottom: 10px;
 
     h1{
         font-family: 'Lexend Deca';
@@ -38,7 +91,7 @@ const Conteudo = styled.section`
     ion-icon{
         font-size:69px;
 
-        color: #EBEBEB;
+        color: ${({feito}) => checkboxColor(feito)};
         box-sizing: border-box;
         border-radius: 5px;
 

@@ -1,10 +1,13 @@
+import { useContext } from "react";
 import styled from "styled-components";
+import { DadosUsuario } from "../Context";
 
-export default function Header({foto}){
+export default function Header(){
+    const {usuario, setUsuario} = useContext(DadosUsuario);
     return(
         <Conteudo>
             <p>TrackIt</p>
-            <img src={foto} alt="Foto de Perfil"/>
+            <img src={localStorage.getItem("foto")} alt="Foto de Perfil"/>
         </Conteudo>
     )
 }

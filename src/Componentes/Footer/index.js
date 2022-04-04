@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom"
-import { useState } from "react"
+import React from "react"
 import styled from "styled-components";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 
 export default function Footer(){
+    const valor = localStorage.getItem("progresso")
     return(
         <Conteudo>
             <Link to={{pathname: "/habitos"}}><p>Hábitos</p></Link>
-            <Link to={{pathname: "/hoje"}}><Hoje>Hoje</Hoje></Link>
+            <Link to={{pathname: "/hoje"}}><Hoje><CircularProgressbar  value={valor} text="Hoje"/></Hoje></Link>
             <Link to={{pathname: "/historico"}}><p>Histórico</p></Link>
         </Conteudo>
     )
@@ -63,4 +65,6 @@ align-items: center;
 justify-content: center;
 
 margin-bottom: 50px;
+
+padding: 5px;
 `

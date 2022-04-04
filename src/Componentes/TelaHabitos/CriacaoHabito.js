@@ -1,12 +1,17 @@
-import { useState } from "react"
+import { useState, useContext } from "react"
 import axios from "axios";
 import styled from "styled-components";
+import { DadosUsuario } from "../Context";
 
-export default function Habito({ setCriacao, token, pegaHabitos}){
-    const listaDias =[{name: "D", id: 1},{name: "S", id: 2},{name: "T", id: 3},{name: "Q", id: 4},{name: "Q", id: 5},{name: "S", id: 6},{name: "S", id: 7}]
+export default function Habito({ setCriacao}){
+    const listaDias =[{name: "D", id: 0},{name: "S", id: 1},{name: "T", id: 2},{name: "Q", id: 3},{name: "Q", id: 4},{name: "S", id: 5},{name: "S", id: 6}]
 
     const [nomeHabito, setNomeHabito] = useState(undefined)
     const [diasSelecionados, setDiasSelecionados] = useState([]);
+
+    const {usuario, setUsuario} = useContext(DadosUsuario);
+
+    const token = localStorage.getItem("token");
 
     const config = {
         headers: {
@@ -22,6 +27,8 @@ export default function Habito({ setCriacao, token, pegaHabitos}){
 
             requisicao.then(resposta => {
                 setCriacao(false);
+
+                window.location.reload();
             })
 
             requisicao.catch(erro => {

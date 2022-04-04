@@ -5,16 +5,21 @@ import Header from "../Header"
 import Footer from "../Footer"
 import Habito from "./CriacaoHabito"
 import Habitos from "./Habitos";
+import { DadosUsuario } from "../Context";
 
 export default function TelaHabitos(){
 
+    const token = localStorage.getItem("token");
+
+    const {usuario, setUsuario} = useContext(DadosUsuario);
+
+
     const [meusHabitos, setMeusHabitos] = useState([])
     const [criacao,setCriacao] = useState(false);
-    const {usuario} = useContext(dadosUsuario);
 
     const config = {
         headers: {
-            "Authorization": `Bearer ${dadosUsuario.token}`
+            "Authorization": `Bearer ${token}`
         }
     }
 
@@ -23,8 +28,6 @@ export default function TelaHabitos(){
 
         requisicao.then(resposta => {
             setMeusHabitos(resposta.data);
-
-            console.log(meusHabitos);
         })
 
         requisicao.catch(erro =>{
@@ -41,6 +44,7 @@ export default function TelaHabitos(){
            )
        }
        else{
+        console.log(meusHabitos);
            return(
                 <ul>
                     {meusHabitos.map(elemento => {return <Habitos id={elemento.id} nome={elemento.name} dias={elemento.days}/>})}

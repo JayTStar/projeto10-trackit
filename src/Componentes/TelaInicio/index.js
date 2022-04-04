@@ -1,12 +1,15 @@
 import { Link, useNavigate } from "react-router-dom"
-import { useState } from "react"
+import { useState, useContext} from "react"
 import axios from "axios";
 import styled from "styled-components";
 import Logo from "../Midias/Logo.png"
+import { DadosUsuario } from "../Context";
 
 export default function TelaInicio({salvarUsuario}){
     const[email, setEmail] = useState(undefined);
     const[senha, setSenha] = useState(undefined);
+
+    const{usuario,setUsuario} = useContext(DadosUsuario);
 
     const navigate = useNavigate();
 
@@ -19,8 +22,9 @@ export default function TelaInicio({salvarUsuario}){
         const requisicao = axios.post("https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/auth/login", infoUsuario);
 
         requisicao.then(resposta => {
-            salvarUsuario(resposta.data);
-
+            localStorage.setItem("foto", resposta.data.image);
+            localStorage.setItem("token", resposta.data.token);
+            setUsuario(resposta.data);
             navigate("/hoje");
         })
 

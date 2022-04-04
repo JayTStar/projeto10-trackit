@@ -1,15 +1,19 @@
 import axios from "axios";
 import styled from "styled-components";
 import { useContext } from "react";
+import { DadosUsuario } from "../Context";
 
 export default function Habitos({id, nome, dias}){
-    const [dadosUsuario, setDadosUsuario] = useContext(dadosUsuario);
-    const listaDias =[{name: "D", id: 1},{name: "S", id: 2},{name: "T", id: 3},{name: "Q", id: 4},{name: "Q", id: 5},{name: "S", id: 6},{name: "S", id: 7}];
+    const listaDias =[{name: "D", id: 0},{name: "S", id: 1},{name: "T", id: 2},{name: "Q", id: 3},{name: "Q", id: 4},{name: "S", id: 5},{name: "S", id: 6}];
     const diasSelecionados = listaDias.filter(elemento => dias.includes(elemento.id) );
+
+    const {usuario, setUsuario} = useContext(DadosUsuario);
+
+    const token = localStorage.getItem("token");
 
     const config = {
         headers: {
-            "Authorization": `Bearer ${dadosUsuario.token}`
+            "Authorization": `Bearer ${token}`
         }
     }
 
